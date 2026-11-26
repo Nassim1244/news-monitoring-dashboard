@@ -1,0 +1,14 @@
+{
+  "name": "news-monitoring-dashboard",
+  "displayName": "News Monitoring Dashboard",
+  "version": "1.0.0",
+  "description": "Build a personal news watch for any field: interview, taste profile, mobile dashboard with a database, and a scheduled run that sorts news into Signal, Watch, To try, Briefs and Noise and learns from your ratings.",
+  "author": {
+    "name": "Nassim1244",
+    "url": "https://github.com/Nassim1244"
+  },
+  "homepage": "https://github.com/Nassim1244/news-monitoring-dashboard",
+  "repository": "https://github.com/Nassim1244/news-monitoring-dashboard",
+  "license": "AGPL-3.0-only",
+  "keywords": ["news", "news-monitoring", "veille", "watch", "digest", "rss", "dashboard", "artifacts", "scheduled-tasks"]
+}
