@@ -120,7 +120,7 @@ Stats per tag: item count and signal count, 👍/🤷/👎 ratio, trend (sparkli
 - Items with feedback are never dropped by consolidation.
 - Heavy feeds: read only entries newer than the last run.
 
-Card fields: title, source, language badge, date, excerpt, tags, bucket, Claude's line (if any), link, actions (👍/🤷/👎, Favourite, Move to..., To try status when relevant, Hide).
+Card fields: title, source, language badge, date, excerpt, tags, bucket, Claude's line (if any), link, actions (👍/🤷/👎, Favourite, Move to..., To try status when relevant, Hide) and Share (🔗 at the top right: opens the system share menu, or copies the link when there is none). Share is also in the card sheet.
 
 **Hide.** Full cards only. Two-step button (Hide, then Confirm within 3 s). A hidden card collapses to one line (title link + Show) with status icons (⭐ if favourite, then the rating). Stored in `feedback.hidden`, synced across devices. Neutral for learning.
 
