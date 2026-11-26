@@ -3,7 +3,7 @@
 **Un plugin Claude Code qui construit votre veille personnelle, pour n'importe quel domaine, et sépare le signal du bruit. / A Claude Code plugin that builds your personal news watch, for any field, and separates signal from noise.**
 
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
-[![Version 1.1.0](https://img.shields.io/badge/version-1.1.0-green.svg)](CHANGELOG.md)
+[![Version 1.1.1](https://img.shields.io/badge/version-1.1.1-green.svg)](CHANGELOG.md)
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757.svg)](https://code.claude.com/docs/en/plugins)
 
 **Français** · [English](#english)
@@ -28,7 +28,8 @@
 
 ## Ce que ça fait
 
-Vous répondez à une interview, Claude construit une page de veille mobile avec sa propre base de données. Chaque semaine (ou chaque jour), une tâche planifiée lit vos sources, supprime les doublons et trie l'actualité en cinq catégories. Vous notez, Claude apprend.
+> [!NOTE]
+> Vous répondez à une interview, Claude construit une page de veille mobile avec sa propre base de données. Chaque semaine (ou chaque jour), une tâche planifiée lit vos sources, supprime les doublons et trie l'actualité en cinq catégories. **Vous notez, Claude apprend.**
 
 | Catégorie | Ce qu'on y trouve |
 |---|---|
@@ -46,8 +47,6 @@ Vous répondez à une interview, Claude construit une page de veille mobile avec
 | ⭐ Favori | Un 👍 fort, conservé au-delà de l'archive de 3 mois |
 | Déplacer une carte vers un autre bucket | Votre définition personnelle du « signal » (« Claude a dit X, vous avez dit Y ») |
 | Statut À essayer (Adopté, Essayé, Abandonné) | Goût et utilité réelle |
-
-À chaque exécution, Claude réécrit un profil de goût condensé à partir de ces retours, plutôt que d'entraîner un modèle.
 
 ## Comment ça marche
 
@@ -72,6 +71,9 @@ flowchart LR
 - **Tâches planifiées**, plus WebFetch et la recherche web.
 - Optionnel : un dossier local, pour garder des copies lisibles de votre profil et de vos sources.
 
+> [!IMPORTANT]
+> Le skill a besoin des **Artifacts avec base de données** et des **tâches planifiées**. Sans eux, la page ne peut pas être publiée ni mise à jour automatiquement.
+
 ## Installation
 
 ```
@@ -79,17 +81,42 @@ flowchart LR
 /plugin install news-monitoring-dashboard@news-monitoring-dashboard
 ```
 
+### Installation manuelle (si la commande `/plugin` est bloquée)
+
+Installez le skill seul à partir du ZIP, sans terminal : Claude s'occupe de la copie.
+
+1. Sur la [page GitHub du dépôt](https://github.com/Nassim1244/news-monitoring-dashboard), cliquez sur **Code**, puis **Download ZIP**.
+
+   <img src="docs/screenshots/download-zip.png" width="480" alt="Bouton Code puis Download ZIP sur GitHub">
+2. Décompressez le fichier `news-monitoring-dashboard-main.zip`.
+3. Ouvrez le dossier décompressé dans Claude Code et demandez :
+
+   > Installe le skill `skills/news-monitoring-dashboard` dans mes skills personnels.
+
+   Claude le copie dans `~/.claude/skills/` (il vous demande d'abord l'autorisation).
+4. Relancez Claude Code, ouvrez le dossier de votre veille et suivez le [Démarrage rapide](#démarrage-rapide).
+
+Le skill s'appelle alors `/news-monitoring-dashboard` (sans le préfixe du plugin). Sans le plugin, pas de mise à jour automatique : pour mettre à jour, téléchargez à nouveau le ZIP et refaites l'étape 3.
+
+> [!WARNING]
+> Ne créez pas votre veille dans le dossier décompressé : il ne sert qu'à l'installation. Vous pouvez le supprimer ensuite.
+
 ## Démarrage rapide
 
 1. Ouvrez **le dossier de votre veille** dans Claude Code (un dossier vide, ou un nouveau sous-dossier : le skill en propose un).
 2. Lancez `/news-monitoring-dashboard:news-monitoring-dashboard`, ou demandez simplement : *« Mets en place une veille sur la cybersécurité »*.
-3. Le skill regarde votre dossier et **détecte à quelle étape vous en êtes**. Vous pouvez donc faire une étape par session et reprendre plus tard.
+3. Le skill regarde votre dossier et **détecte à quelle étape vous en êtes**.
 
-| Étape | Durée | Résultat |
-|---|---|---|
-| 0. Interview | ~20 min | `config/watch-settings.md`, `config/sources.md` |
-| 1. Profil de goût | ~30 min | `config/MyTaste.md` |
-| 2. Page, base, premier rattrapage, planification | ~30 min | `artifact/index.html`, `run/recurring-run.md`, tâche planifiée |
+La mise en place complète prend environ 15 minutes.
+
+| Étape | Résultat |
+|---|---|
+| 0. Interview | `config/watch-settings.md`, `config/sources.md` |
+| 1. Profil de goût | `config/MyTaste.md` |
+| 2. Page, base, premier rattrapage, planification | `artifact/index.html`, `run/recurring-run.md`, tâche planifiée |
+
+> [!TIP]
+> **Avancez à votre rythme, étape par étape.** Rien ne vous oblige à tout faire d'un coup : faites une étape, fermez la session, et reprenez plus tard. Le skill retrouve automatiquement où vous vous étiez arrêté.
 
 **Au quotidien :**
 
@@ -100,7 +127,10 @@ flowchart LR
 - Activez ou coupez des sources dans l'onglet Sources (une source en échec 3 fois de suite est signalée comme cassée).
 - Après 3 ou 4 semaines, demandez à Claude de revoir les seuils À surveiller vers Essentiel avec vos notes.
 
-**Conseils :** commencez petit (15 à 25 sources), puis élargissez quand les premières semaines vous conviennent. L'exemple `skills/news-monitoring-dashboard/references/examples/ai-watch/` montre la profondeur attendue d'un bon profil.
+> [!TIP]
+> **Commencez petit** (15 à 25 sources), puis élargissez quand les premières semaines vous conviennent.
+
+L'exemple `skills/news-monitoring-dashboard/references/examples/ai-watch/` montre la profondeur attendue d'un bon profil.
 
 ## Packs de départ
 
@@ -113,7 +143,8 @@ Un pack est un point de départ : arbre de tags, indices pour les règles de tri
 | **Marketing** | Marketing digital, SEO, réseaux sociaux, CRM, martech |
 | **Industry** | Industrie 4.0, production, supply chain, énergie en usine |
 
-Les sources candidates ne sont **pas testées** à l'avance : l'interview teste chacune avec WebFetch et trouve le bon flux (seul le pack AI liste des flux testés en novembre 2026).
+> [!NOTE]
+> Les sources candidates ne sont **pas testées** à l'avance : l'interview teste chacune avec WebFetch et trouve le bon flux (seul le pack AI liste des flux testés en novembre 2026).
 
 **Ajouter un pack :** copiez un fichier de `skills/news-monitoring-dashboard/references/packs/` et gardez les mêmes sections.
 
@@ -145,7 +176,8 @@ La méthode est pensée pour rester légère :
 - traduction limitée aux titres (et aux extraits hors Bruit) ;
 - les éléments déjà vus ne sont jamais retraités.
 
-Comptez environ 15 à 30 minutes d'exécution par semaine pour 20 à 25 sources.
+> [!NOTE]
+> Comptez environ **15 à 30 minutes d'exécution par semaine** pour 20 à 25 sources.
 
 ## Structure du dépôt
 
@@ -200,7 +232,8 @@ Pistes envisagées, sans engagement :
 
 ## What it does
 
-You answer an interview, Claude builds a mobile news page with its own database. Every week (or every day), a scheduled task reads your sources, removes duplicates and sorts the news into five buckets. You rate, Claude learns.
+> [!NOTE]
+> You answer an interview, Claude builds a mobile news page with its own database. Every week (or every day), a scheduled task reads your sources, removes duplicates and sorts the news into five buckets. **You rate, Claude learns.**
 
 | Bucket | What goes there |
 |---|---|
@@ -218,8 +251,6 @@ You answer an interview, Claude builds a mobile news page with its own database.
 | ⭐ Favourite | A strong 👍, kept beyond the 3-month archive |
 | Moving a card to another bucket | Your own definition of "signal" ("Claude said X, you said Y") |
 | To try status (Adopted, Tried, Dropped) | Taste and real usefulness |
-
-Each run, Claude rewrites a distilled taste profile from this feedback instead of training a model.
 
 ## How it works
 
@@ -244,6 +275,9 @@ flowchart LR
 - **Scheduled tasks**, plus WebFetch and web search.
 - Optional: a local folder, to keep readable copies of your profile and sources.
 
+> [!IMPORTANT]
+> The skill needs **Artifacts with a database** and **scheduled tasks**. Without them, the page can't be published or updated automatically.
+
 ## Install
 
 ```
@@ -251,17 +285,42 @@ flowchart LR
 /plugin install news-monitoring-dashboard@news-monitoring-dashboard
 ```
 
+### Manual install (if the `/plugin` command is blocked)
+
+Install the skill on its own from the ZIP, no terminal needed: Claude does the copying.
+
+1. On the [repository's GitHub page](https://github.com/Nassim1244/news-monitoring-dashboard), click **Code**, then **Download ZIP**.
+
+   <img src="docs/screenshots/download-zip.png" width="480" alt="Code button then Download ZIP on GitHub">
+2. Unzip `news-monitoring-dashboard-main.zip`.
+3. Open the unzipped folder in Claude Code and ask:
+
+   > Install the skill `skills/news-monitoring-dashboard` into my personal skills.
+
+   Claude copies it into `~/.claude/skills/` (it asks for your permission first).
+4. Restart Claude Code, open your watch folder and follow the [Quick start](#quick-start).
+
+The skill is then called `/news-monitoring-dashboard` (without the plugin prefix). Without the plugin there are no automatic updates: to update, download the ZIP again and repeat step 3.
+
+> [!WARNING]
+> Don't build your watch inside the unzipped folder: it is only for the install. You can delete it afterwards.
+
 ## Quick start
 
 1. Open **your watch folder** in Claude Code (an empty folder, or a new subfolder: the skill proposes one).
 2. Run `/news-monitoring-dashboard:news-monitoring-dashboard`, or just ask: *"Set up a news watch on cybersecurity"*.
-3. The skill looks at your folder and **detects which step you are at**, so you can do one step per session and resume later.
+3. The skill looks at your folder and **detects which step you are at**.
 
-| Step | Time | Output |
-|---|---|---|
-| 0. Interview | ~20 min | `config/watch-settings.md`, `config/sources.md` |
-| 1. Taste profile | ~30 min | `config/MyTaste.md` |
-| 2. Page, database, first backfill, schedule | ~30 min | `artifact/index.html`, `run/recurring-run.md`, scheduled task |
+The full setup takes about 15 minutes.
+
+| Step | Output |
+|---|---|
+| 0. Interview | `config/watch-settings.md`, `config/sources.md` |
+| 1. Taste profile | `config/MyTaste.md` |
+| 2. Page, database, first backfill, schedule | `artifact/index.html`, `run/recurring-run.md`, scheduled task |
+
+> [!TIP]
+> **Go at your own pace, step by step.** You don't have to do it all at once: finish a step, close the session, and come back later. The skill picks up where you left off.
 
 **Daily use:**
 
@@ -272,7 +331,10 @@ flowchart LR
 - Turn sources on or off in the Sources tab (a source that fails 3 runs in a row is flagged as broken).
 - After 3 or 4 weeks, ask Claude to review the Watch to Signal thresholds with your ratings.
 
-**Tips:** start small (15 to 25 sources), then add more once the first weeks look right. The example in `skills/news-monitoring-dashboard/references/examples/ai-watch/` shows how detailed a good taste profile is.
+> [!TIP]
+> **Start small** (15 to 25 sources), then add more once the first weeks look right.
+
+The example in `skills/news-monitoring-dashboard/references/examples/ai-watch/` shows how detailed a good taste profile is.
 
 ## Starting packs
 
@@ -285,7 +347,8 @@ A pack is a starting point: a tag tree, hints for the sorting rules and candidat
 | **Marketing** | Digital marketing, search, social, CRM, martech |
 | **Industry** | Industry 4.0, manufacturing, supply chain, energy in plants |
 
-Candidate sources are **not tested** in advance: the interview tests each one with WebFetch and finds the right feed (only the AI pack lists feeds tested in November 2026).
+> [!NOTE]
+> Candidate sources are **not tested** in advance: the interview tests each one with WebFetch and finds the right feed (only the AI pack lists feeds tested in November 2026).
 
 **Add a pack:** copy a file from `skills/news-monitoring-dashboard/references/packs/` and keep the same sections.
 
@@ -317,7 +380,8 @@ The method is built to stay light:
 - translation limited to titles (and to excerpts outside Noise);
 - items already seen are never processed twice.
 
-Count roughly 15 to 30 minutes of run time per week for 20 to 25 sources.
+> [!NOTE]
+> Count roughly **15 to 30 minutes of run time per week** for 20 to 25 sources.
 
 ## Repository layout
 
