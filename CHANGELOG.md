@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Share button (🔗) on each full card and in the card sheet. It opens the system share menu (title, Claude's line, link) and falls back to copying the link.
+
 ## [1.0.1] - 2026-11-26
 
 ### Changed
