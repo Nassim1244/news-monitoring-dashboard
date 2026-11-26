@@ -93,6 +93,8 @@ main{padding-top:16px;display:flex;flex-direction:column;gap:24px}
 .ib[aria-pressed="true"]{opacity:1;filter:none;background:var(--soft)}
 .ib.txt{font-size:14px;font-weight:600;opacity:1;filter:none;padding:0 12px;color:var(--ink)}
 .acts .sp{flex:1}
+.shr{margin-left:auto;flex:none;width:36px;height:36px;margin-top:-6px;margin-right:-6px;border:0;background:transparent;border-radius:8px;font-size:15px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.shr:hover{background:var(--soft)}
 .ib.txt.hide{color:var(--muted)}
 .ib.txt.armed{background:var(--bc,var(--accent));color:var(--surface)}
 .card.slim{flex-direction:row;align-items:center;gap:8px;padding:2px 6px 2px 14px}
@@ -293,6 +295,14 @@ function renderWeekSel(){
 }
 function rateBtns(id){const f=S.fb.get(id)||{};return[[1,"👍","Like"],[0.5,"🤷","Meh"],[0,"👎","Dislike"]].map(([v,e,l])=>`<button class="ib" data-act="rate" data-id="${esc(id)}" data-v="${v}" aria-pressed="${f.rating===v}" aria-label="${l}" title="${l}">${e}</button>`).join("")}
 function favBtn(id){const f=S.fb.get(id)||{};return`<button class="ib" data-act="fav" data-id="${esc(id)}" aria-pressed="${!!f.favourite}" aria-label="Favourite" title="Favourite">⭐</button>`}
+function shareBtn(id){return`<button class="shr" data-act="share" data-id="${esc(id)}" aria-label="Share" title="Share">🔗</button>`}
+async function shareIt(id){
+  const it=itemById(id);if(!it||!it.url)return;
+  const d={title:it.title||"",text:it.oneLine?`${it.title}: ${it.oneLine}`:(it.title||""),url:it.url};
+  if(navigator.share){try{await navigator.share(d);return}catch(e){if(e&&e.name==="AbortError")return}}
+  copyLink(d.url);
+}
+function copyLink(u){(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>toast("Link copied")).catch(()=>toast("Can't share here. Long-press the title to copy the link."))}
 function trySel(id,cur){return`<select class="trysel" data-act="try" data-id="${esc(id)}" aria-label="To try status">${TRY.map(([k,l])=>`<option value="${k}"${k===cur?" selected":""}>${l}</option>`).join("")}</select>`}
 function tagChips(t){return(t||[]).length?`<div class="tags">${t.map(x=>`<span class="tag">${esc(x)}</span>`).join("")}</div>`:""}
 function movedPill(it){const f=S.fb.get(it.id);if(!f||!f.bucketUser)return"";return`<span class="pill moved">Claude said ${esc(BL[f.bucketClaude||it.bucket]||"?")}</span>`}
@@ -304,7 +314,7 @@ function card(it){
   if(f.hidden)return`<article class="card slim b-${b}"><a href="${esc(it.url)}" target="_blank" rel="noopener" title="${esc(it.title)}">${esc(it.title)}</a>${(()=>{const r=f.rating===1?["👍","Liked"]:f.rating===0.5?["🤷","Meh"]:f.rating===0?["👎","Disliked"]:null;const l=[f.favourite?"Favourite":"",r?r[1]:"Not rated"].filter(Boolean).join(", ");return`<span class="st" role="img" aria-label="${l}" title="${l}">${f.favourite?"⭐":""}${r?r[0]:""}</span>`})()}<button class="ib txt" data-act="show" data-id="${esc(it.id)}" aria-label="Show card">Show</button></article>`;
   const armed=S.armed===it.id;
   return`<article class="card b-${b}">
-  <div class="meta"><span class="src">${esc(srcName(it.sourceId))}</span><time>${fmtD(it.publishedAt)}</time>${it.corroboration>1?`<span class="pill corro" title="Sources mentioning this story">×${it.corroboration} sources</span>`:""}${it.promotedFrom?`<span class="pill">Promoted from Watch</span>`:""}${(it.updates&&it.updates.length)?`<span class="pill upd">Updated · seen ${it.seenWeeks||it.updates.length+1} weeks</span>`:""}${movedPill(it)}</div>
+  <div class="meta"><span class="src">${esc(srcName(it.sourceId))}</span><time>${fmtD(it.publishedAt)}</time>${it.corroboration>1?`<span class="pill corro" title="Sources mentioning this story">×${it.corroboration} sources</span>`:""}${it.promotedFrom?`<span class="pill">Promoted from Watch</span>`:""}${(it.updates&&it.updates.length)?`<span class="pill upd">Updated · seen ${it.seenWeeks||it.updates.length+1} weeks</span>`:""}${movedPill(it)}${shareBtn(it.id)}</div>
   <h3><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a></h3>
   ${it.oneLine?`<p class="why"><b>${whyLab}:</b> ${esc(it.oneLine)}</p>`:""}
   ${it.excerpt?`<p class="ex${exOpen?" open":""}" data-act="ex" data-id="${esc(it.id)}">${esc(it.excerpt)}</p>`:""}
@@ -411,7 +421,7 @@ function renderSheet(){
   const it=itemById(sheetFor);if(!it){closeSheet();return}
   const f=S.fb.get(it.id)||{};const b=eff(it);
   $("#sheet-pn").innerHTML=`<h3 id="sheet-t">${esc(it.title)}</h3>
-  <div class="lbl">Rate</div><div class="acts" style="border:0;margin:0">${rateBtns(it.id)}${favBtn(it.id)}</div>
+  <div class="lbl">Rate</div><div class="acts" style="border:0;margin:0">${rateBtns(it.id)}${favBtn(it.id)}${shareBtn(it.id)}</div>
   <div class="lbl">Move to</div><div class="grid">${BUCKETS.map(([k,l])=>`<button class="opt b-${k}" data-act="move" data-id="${esc(it.id)}" data-v="${k}" aria-pressed="${b===k}">${l}${(f.bucketClaude||it.bucket)===k?" (Claude)":""}</button>`).join("")}</div>
   ${b==="totry"||f.tryStatus?`<div class="lbl">To try status</div>${trySel(it.id,f.tryStatus||"totry")}`:""}
   <button class="btn" data-act="close">Done</button>`;
@@ -423,6 +433,7 @@ document.addEventListener("click",e=>{
   const a=el.dataset.act,id=el.dataset.id;
   if(a==="rate")act(id,"rate",el.dataset.v);
   else if(a==="fav")act(id,"fav");
+  else if(a==="share")shareIt(id);
   else if(a==="hide")act(id,"hide");
   else if(a==="show")act(id,"show");
   else if(a==="move"){act(id,"move",el.dataset.v)}

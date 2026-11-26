@@ -3,13 +3,22 @@
 **Un plugin Claude Code qui construit votre veille personnelle, pour n'importe quel domaine, et sépare le signal du bruit. / A Claude Code plugin that builds your personal news watch, for any field, and separates signal from noise.**
 
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
-[![Version 1.0.1](https://img.shields.io/badge/version-1.0.1-green.svg)](CHANGELOG.md)
+[![Version 1.1.0](https://img.shields.io/badge/version-1.1.0-green.svg)](CHANGELOG.md)
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757.svg)](https://code.claude.com/docs/en/plugins)
 
 **Français** · [English](#english)
 
-<!-- TODO: add docs/screenshot.png (dashboard on mobile, light and dark) -->
-*Une capture d'écran du tableau de bord (mobile, thèmes clair et sombre) arrive bientôt. / A screenshot of the dashboard (mobile, light and dark) is coming soon.*
+| <img src="docs/screenshots/week-unsorted.png" width="240" alt="New week, nothing sorted yet"> | <img src="docs/screenshots/week-sorted.png" width="240" alt="Week sorted"> | <img src="docs/screenshots/news-list.png" width="240" alt="Briefs list"> |
+|:---:|:---:|:---:|
+| Semaine reçue, rien de trié<br/>*New week, nothing sorted yet* | Semaine triée<br/>*Week sorted* | Liste des brèves<br/>*Briefs list* |
+
+| <img src="docs/screenshots/noise.png" width="240" alt="Noise, collapsed list"> | <img src="docs/screenshots/favourites.png" width="240" alt="Favourites"> | <img src="docs/screenshots/share.png" width="240" alt="Share button on a card"> |
+|:---:|:---:|:---:|
+| Bruit<br/>*Noise* | Favoris<br/>*Favourites* | Bouton Partager<br/>*Share button* |
+
+| <img src="docs/screenshots/tags-suggested.png" width="240" alt="Suggested tag"> | <img src="docs/screenshots/tags-tree.png" width="240" alt="Tag tree with stats"> | <img src="docs/screenshots/sources.png" width="240" alt="Sources panel"> |
+|:---:|:---:|:---:|
+| Tag suggéré par Claude<br/>*Tag suggested by Claude* | Arbre des tags et stats<br/>*Tag tree and stats* | Onglet Sources<br/>*Sources panel* |
 
 ---
 
@@ -34,7 +43,7 @@ Vous répondez à une interview, Claude construit une page de veille mobile avec
 | Votre action | Ce que Claude en tire |
 |---|---|
 | 👍 / 🤷 / 👎 sur une carte | Votre goût (poids 1 / 0,5 / 0) |
-| Favori | Un 👍 fort, conservé au-delà de l'archive de 3 mois |
+| ⭐ Favori | Un 👍 fort, conservé au-delà de l'archive de 3 mois |
 | Déplacer une carte vers un autre bucket | Votre définition personnelle du « signal » (« Claude a dit X, vous avez dit Y ») |
 | Statut À essayer (Adopté, Essayé, Abandonné) | Goût et utilité réelle |
 
@@ -86,6 +95,7 @@ flowchart LR
 
 - Ouvrez la page sur votre téléphone ou votre ordinateur.
 - Notez les cartes, mettez en favori les meilleures, déplacez celles que Claude a mal rangées : chaque déplacement affine votre définition du signal.
+- Partagez une carte avec 🔗 : le menu de partage du téléphone s'ouvre, sinon le lien est copié.
 - Acceptez ou rejetez les tags suggérés dans l'onglet Tags.
 - Activez ou coupez des sources dans l'onglet Sources (une source en échec 3 fois de suite est signalée comme cassée).
 - Après 3 ou 4 semaines, demandez à Claude de revoir les seuils À surveiller vers Essentiel avec vos notes.
@@ -166,7 +176,7 @@ Pistes envisagées, sans engagement :
 
 - [ ] davantage de packs de départ ;
 - [ ] lecture via navigateur pour les sources qui bloquent WebFetch ;
-- [ ] captures d'écran et démo ;
+- [ ] une démo vidéo ;
 - [ ] davantage de langues d'affichage ;
 - [ ] réglage automatique des seuils À surveiller vers Essentiel.
 
@@ -205,7 +215,7 @@ You answer an interview, Claude builds a mobile news page with its own database.
 | Your action | What Claude takes from it |
 |---|---|
 | 👍 / 🤷 / 👎 on a card | Your taste (weight 1 / 0.5 / 0) |
-| Favourite | A strong 👍, kept beyond the 3-month archive |
+| ⭐ Favourite | A strong 👍, kept beyond the 3-month archive |
 | Moving a card to another bucket | Your own definition of "signal" ("Claude said X, you said Y") |
 | To try status (Adopted, Tried, Dropped) | Taste and real usefulness |
 
@@ -257,6 +267,7 @@ flowchart LR
 
 - Open the page on your phone or computer.
 - Rate cards, favourite the best ones, move cards Claude put in the wrong bucket: every move sharpens your idea of signal.
+- Share a card with 🔗: your phone's share menu opens, or the link is copied.
 - Accept or reject the tags Claude suggests in the Tags tab.
 - Turn sources on or off in the Sources tab (a source that fails 3 runs in a row is flagged as broken).
 - After 3 or 4 weeks, ask Claude to review the Watch to Signal thresholds with your ratings.
@@ -337,7 +348,7 @@ Ideas under consideration, no commitment:
 
 - [ ] more starting packs;
 - [ ] browser-based fetching for sources that block WebFetch;
-- [ ] screenshots and a demo;
+- [ ] a video demo;
 - [ ] more display languages;
 - [ ] automatic tuning of the Watch to Signal thresholds.
 
