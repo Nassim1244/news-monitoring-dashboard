@@ -19,6 +19,8 @@ Prompt terse. Talk to user: normal full sentences, user's language. Pause for us
    - `{{UI_LANG}}` = displayLanguage (`fr`, `en`).
    - `{{LOCALE}}` = `fr-FR` or `en-GB` (or matching locale).
 2. displayLanguage not `en`: translate every UI string in the script (tabs, buckets, buttons, empty states, toasts, aria labels). Keep data values (`signal`, `watch`, `totry`, `brief`, `noise`, try statuses) unchanged.
+   displayLanguage = `fr`: bucket labels use exactly: Signal = "Essentiel", Watch = "À surveiller", To try = "À essayer", Briefs = "Brèves", Noise = "Bruit".
+   Apply it to the "To try" tab, "To try status", empty-state texts naming buckets, and "Promoted from Watch" = "Promu depuis À surveiller".
 3. Add on card: small language badge from `item.lang` (FR / EN) when sourceLanguages = `fr+en`. If `titleOriginal`: show it as link `title` attribute or small second line.
 4. cadence `daily`: tab "This week" becomes "Today" (translated), period label = date, not ISO week.
 5. Keep: mobile first, light + dark, 16px body, 44px taps, no long dash.

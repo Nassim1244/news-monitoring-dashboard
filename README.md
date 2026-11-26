@@ -3,7 +3,7 @@
 **Un plugin Claude Code qui construit votre veille personnelle, pour n'importe quel domaine, et sépare le signal du bruit. / A Claude Code plugin that builds your personal news watch, for any field, and separates signal from noise.**
 
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
-[![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-green.svg)](CHANGELOG.md)
+[![Version 1.0.1](https://img.shields.io/badge/version-1.0.1-green.svg)](CHANGELOG.md)
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757.svg)](https://code.claude.com/docs/en/plugins)
 
 **Français** · [English](#english)
@@ -23,11 +23,11 @@ Vous répondez à une interview, Claude construit une page de veille mobile avec
 
 | Catégorie | Ce qu'on y trouve |
 |---|---|
-| **Signal** | Les évolutions de fond de votre domaine, probablement encore pertinentes dans 3 mois |
-| **Watch** (à surveiller) | Prometteur mais pas confirmé. Promu en Signal si le sujet dure |
-| **To try** (à essayer) | Ce que vous pouvez utiliser maintenant : outils, méthodes, modèles, offres |
-| **Briefs** | Les événements ponctuels qu'il faut connaître (ce qui s'est passé, pourquoi) |
-| **Noise** (bruit) | Tout le reste, conservé mais replié |
+| **Essentiel** | Les évolutions de fond de votre domaine, probablement encore pertinentes dans 3 mois |
+| **À surveiller** | Prometteur mais pas confirmé. Promu en Essentiel si le sujet dure |
+| **À essayer** | Ce que vous pouvez utiliser maintenant : outils, méthodes, modèles, offres |
+| **Brèves** | Les événements ponctuels qu'il faut connaître (ce qui s'est passé, pourquoi) |
+| **Bruit** | Tout le reste, conservé mais replié |
 
 **Le système apprend de vos actions :**
 
@@ -36,7 +36,7 @@ Vous répondez à une interview, Claude construit une page de veille mobile avec
 | 👍 / 🤷 / 👎 sur une carte | Votre goût (poids 1 / 0,5 / 0) |
 | Favori | Un 👍 fort, conservé au-delà de l'archive de 3 mois |
 | Déplacer une carte vers un autre bucket | Votre définition personnelle du « signal » (« Claude a dit X, vous avez dit Y ») |
-| Statut To try (Adopté, Essayé, Abandonné) | Goût et utilité réelle |
+| Statut À essayer (Adopté, Essayé, Abandonné) | Goût et utilité réelle |
 
 À chaque exécution, Claude réécrit un profil de goût condensé à partir de ces retours, plutôt que d'entraîner un modèle.
 
@@ -88,7 +88,7 @@ flowchart LR
 - Notez les cartes, mettez en favori les meilleures, déplacez celles que Claude a mal rangées : chaque déplacement affine votre définition du signal.
 - Acceptez ou rejetez les tags suggérés dans l'onglet Tags.
 - Activez ou coupez des sources dans l'onglet Sources (une source en échec 3 fois de suite est signalée comme cassée).
-- Après 3 ou 4 semaines, demandez à Claude de revoir les seuils Watch vers Signal avec vos notes.
+- Après 3 ou 4 semaines, demandez à Claude de revoir les seuils À surveiller vers Essentiel avec vos notes.
 
 **Conseils :** commencez petit (15 à 25 sources), puis élargissez quand les premières semaines vous conviennent. L'exemple `skills/news-monitoring-dashboard/references/examples/ai-watch/` montre la profondeur attendue d'un bon profil.
 
@@ -130,9 +130,9 @@ Les fichiers de votre veille vivent dans **votre dossier de travail**, pas dans 
 
 La méthode est pensée pour rester légère :
 
-- les extraits viennent des flux, Claude n'écrit **qu'une ligne** pour Signal, Watch, To try et Briefs ;
+- les extraits viennent des flux, Claude n'écrit **qu'une ligne** pour Essentiel, À surveiller, À essayer et Brèves ;
 - plafond de 50 éléments par semaine (12 par jour en cadence quotidienne) ;
-- traduction limitée aux titres (et aux extraits hors Noise) ;
+- traduction limitée aux titres (et aux extraits hors Bruit) ;
 - les éléments déjà vus ne sont jamais retraités.
 
 Comptez environ 15 à 30 minutes d'exécution par semaine pour 20 à 25 sources.
@@ -168,7 +168,7 @@ Pistes envisagées, sans engagement :
 - [ ] lecture via navigateur pour les sources qui bloquent WebFetch ;
 - [ ] captures d'écran et démo ;
 - [ ] davantage de langues d'affichage ;
-- [ ] réglage automatique des seuils Watch vers Signal.
+- [ ] réglage automatique des seuils À surveiller vers Essentiel.
 
 ## Licence
 

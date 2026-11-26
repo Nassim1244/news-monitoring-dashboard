@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-11-26
+
+### Changed
+- French display language: buckets are named Essentiel, À surveiller, À essayer, Brèves and Bruit on the page. Stored values are unchanged.
+- README French section uses the French bucket names.
+
 ## [1.0.0] - 2026-11-26
 
 First public release, as a Claude Code plugin. Extracted from a personal AI watch running weekly since November 2026.
@@ -23,5 +29,6 @@ First public release, as a Claude Code plugin. Extracted from a personal AI watc
 - Self-contained recurring run prompt template, plus an optional local mirror add-on.
 - Anonymized AI watch as a worked example.
 
-[Unreleased]: https://github.com/Nassim1244/news-monitoring-dashboard/compare/v1.0.0...dev
+[Unreleased]: https://github.com/Nassim1244/news-monitoring-dashboard/compare/v1.0.1...dev
+[1.0.1]: https://github.com/Nassim1244/news-monitoring-dashboard/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/Nassim1244/news-monitoring-dashboard/releases/tag/v1.0.0
