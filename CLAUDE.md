@@ -16,7 +16,9 @@ Claude Code plugin. The repo is its own marketplace.
 - `dev`: all work happens here (or in short branches merged into `dev`).
 - Release: update `CHANGELOG.md` and versions on `dev`, then PR `dev` to `main`
   merged with a merge commit (no squash, no rebase), title `chore(release): vX.Y.Z`.
-  Then tag `vX.Y.Z` on that merge commit.
+  Then tag `vX.Y.Z` (annotated) on that merge commit.
+- After a release, never merge, pull, rebase or fast-forward `main` into `dev`.
+  `dev` keeps going from its own tip; the next PR still merges cleanly.
 - Result: `main` has one merge commit per release
   (`git log --first-parent main`), `dev` keeps every atomic commit, and
   `git log --graph --all` shows two lines joined at each release.
