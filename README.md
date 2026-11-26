@@ -83,13 +83,18 @@ flowchart LR
 
 1. Ouvrez **le dossier de votre veille** dans Claude Code (un dossier vide, ou un nouveau sous-dossier : le skill en propose un).
 2. Lancez `/news-monitoring-dashboard:news-monitoring-dashboard`, ou demandez simplement : *« Mets en place une veille sur la cybersécurité »*.
-3. Le skill regarde votre dossier et **détecte à quelle étape vous en êtes**. Vous pouvez donc faire une étape par session et reprendre plus tard.
+3. Le skill regarde votre dossier et **détecte à quelle étape vous en êtes**.
 
-| Étape | Durée | Résultat |
-|---|---|---|
-| 0. Interview | ~20 min | `config/watch-settings.md`, `config/sources.md` |
-| 1. Profil de goût | ~30 min | `config/MyTaste.md` |
-| 2. Page, base, premier rattrapage, planification | ~30 min | `artifact/index.html`, `run/recurring-run.md`, tâche planifiée |
+La mise en place complète prend environ 15 minutes.
+
+| Étape | Résultat |
+|---|---|
+| 0. Interview | `config/watch-settings.md`, `config/sources.md` |
+| 1. Profil de goût | `config/MyTaste.md` |
+| 2. Page, base, premier rattrapage, planification | `artifact/index.html`, `run/recurring-run.md`, tâche planifiée |
+
+> [!TIP]
+> **Avancez à votre rythme, étape par étape.** Rien ne vous oblige à tout faire d'un coup : faites une étape, fermez la session, et reprenez plus tard. Le skill retrouve automatiquement où vous vous étiez arrêté.
 
 **Au quotidien :**
 
@@ -255,13 +260,18 @@ flowchart LR
 
 1. Open **your watch folder** in Claude Code (an empty folder, or a new subfolder: the skill proposes one).
 2. Run `/news-monitoring-dashboard:news-monitoring-dashboard`, or just ask: *"Set up a news watch on cybersecurity"*.
-3. The skill looks at your folder and **detects which step you are at**, so you can do one step per session and resume later.
+3. The skill looks at your folder and **detects which step you are at**.
 
-| Step | Time | Output |
-|---|---|---|
-| 0. Interview | ~20 min | `config/watch-settings.md`, `config/sources.md` |
-| 1. Taste profile | ~30 min | `config/MyTaste.md` |
-| 2. Page, database, first backfill, schedule | ~30 min | `artifact/index.html`, `run/recurring-run.md`, scheduled task |
+The full setup takes about 15 minutes.
+
+| Step | Output |
+|---|---|
+| 0. Interview | `config/watch-settings.md`, `config/sources.md` |
+| 1. Taste profile | `config/MyTaste.md` |
+| 2. Page, database, first backfill, schedule | `artifact/index.html`, `run/recurring-run.md`, scheduled task |
+
+> [!TIP]
+> **Go at your own pace, step by step.** You don't have to do it all at once: finish a step, close the session, and come back later. The skill picks up where you left off.
 
 **Daily use:**
 
