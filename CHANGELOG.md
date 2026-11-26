@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-11-26
+
+### Added
+- Manual install from the GitHub ZIP, for when the `/plugin` command is blocked: Claude copies the skill into the personal skills folder. With a screenshot of the Download ZIP button.
+
+### Changed
+- Quick start gives a single setup time (about 15 minutes) instead of a duration per step, with a tip that each step can be done at your own pace.
+- README highlights key points with callouts (intro, requirements, start small, pack sources, run time).
+
 ## [1.1.0] - 2026-11-26
 
 ### Added
