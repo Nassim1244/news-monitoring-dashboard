@@ -39,7 +39,7 @@ Vous répondez à une interview, Claude construit une page de veille mobile avec
 | Votre action | Ce que Claude en tire |
 |---|---|
 | 👍 / 🤷 / 👎 sur une carte | Votre goût (poids 1 / 0,5 / 0) |
-| Favori | Un 👍 fort, conservé au-delà de l'archive de 3 mois |
+| ⭐ Favori | Un 👍 fort, conservé au-delà de l'archive de 3 mois |
 | Déplacer une carte vers un autre bucket | Votre définition personnelle du « signal » (« Claude a dit X, vous avez dit Y ») |
 | Statut À essayer (Adopté, Essayé, Abandonné) | Goût et utilité réelle |
 
@@ -210,7 +210,7 @@ You answer an interview, Claude builds a mobile news page with its own database.
 | Your action | What Claude takes from it |
 |---|---|
 | 👍 / 🤷 / 👎 on a card | Your taste (weight 1 / 0.5 / 0) |
-| Favourite | A strong 👍, kept beyond the 3-month archive |
+| ⭐ Favourite | A strong 👍, kept beyond the 3-month archive |
 | Moving a card to another bucket | Your own definition of "signal" ("Claude said X, you said Y") |
 | To try status (Adopted, Tried, Dropped) | Taste and real usefulness |
 
