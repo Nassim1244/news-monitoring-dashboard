@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="{{UI_LANG}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{WATCH_NAME}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: one reading column (max 720px), cards stacked; bottom tab bar on phone, top tabs on desktop. */
+:root{
+  --bg:#f3f4f1; --surface:#ffffff; --ink:#1a1f26; --muted:#5b6470; --line:#dcdfd8;
+  --accent:#c2410c; --accent-ink:#ffffff; --soft:#eceee9;
+  --signal:#1d4ed8; --watch:#a15c07; --totry:#047857; --brief:#6d28d9; --noise:#6b7280;
+  --ok:#15803d; --warn:#b45309; --bad:#b91c1c;
+  --f-body:"Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --r:12px; --nav-h:64px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111418; --surface:#1a1f26; --ink:#e6e9ed; --muted:#9aa3ae; --line:#2b323b;
+    --accent:#fb8a4c; --accent-ink:#1a1206; --soft:#222830;
+    --signal:#82a6ff; --watch:#e3b54d; --totry:#4fd1a1; --brief:#b9a2ff; --noise:#9aa3ae;
+    --ok:#4ade80; --warn:#fbbf24; --bad:#f87171;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111418; --surface:#1a1f26; --ink:#e6e9ed; --muted:#9aa3ae; --line:#2b323b;
+  --accent:#fb8a4c; --accent-ink:#1a1206; --soft:#222830;
+  --signal:#82a6ff; --watch:#e3b54d; --totry:#4fd1a1; --brief:#b9a2ff; --noise:#9aa3ae;
+  --ok:#4ade80; --warn:#fbbf24; --bad:#f87171;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--f-body);-webkit-text-size-adjust:100%;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px)}
+a{color:inherit}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3{text-wrap:balance;margin:0}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+header.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:12px;min-height:56px}
+.brand{white-space:nowrap;font-weight:700;font-size:18px;letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+.brand i{width:10px;height:10px;border-radius:50%;background:var(--accent);display:inline-block;box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 20%,transparent)}
+.weeksel{margin-left:auto}
+.weeksel select{min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-variant-numeric:tabular-nums}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs ul{list-style:none;margin:0 auto;padding:0;display:grid;grid-template-columns:repeat(5,1fr);max-width:720px}
+nav.tabs a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:var(--nav-h);text-decoration:none;font-size:12px;color:var(--muted);font-weight:500}
+nav.tabs a .ic{font-size:18px;line-height:1}
+nav.tabs a[aria-current="page"]{color:var(--accent)}
+nav.tabs .badge{font-family:var(--f-mono);font-size:10px}
+@media (min-width:760px){
+  body{padding-bottom:32px}
+  nav.tabs{position:sticky;top:56px;bottom:auto;border-top:0;border-bottom:1px solid var(--line);background:var(--bg)}
+  nav.tabs a{flex-direction:row;min-height:48px;font-size:14px;gap:6px}
+  nav.tabs a[aria-current="page"]{box-shadow:inset 0 -2px 0 var(--accent)}
+}
+main{padding-top:16px;display:flex;flex-direction:column;gap:24px}
+.sec{display:flex;flex-direction:column;gap:12px}
+.sec-h{display:flex;align-items:baseline;gap:8px}
+.sec-h h2{font-size:20px;font-weight:700}
+.sec-h .n{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.sec-h .hint{margin-left:auto;font-size:13px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 14px 8px;display:flex;flex-direction:column;gap:8px;border-left:4px solid var(--bc,var(--line))}
+.b-signal{--bc:var(--signal)} .b-watch{--bc:var(--watch)} .b-totry{--bc:var(--totry)} .b-brief{--bc:var(--brief)} .b-noise{--bc:var(--noise)}
+.meta{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+.meta .src{font-weight:600;color:var(--ink)}
+.meta time{font-variant-numeric:tabular-nums}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.pill.moved{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+.pill.upd{background:color-mix(in srgb,var(--signal) 14%,transparent);color:var(--signal)}
+.upds{margin:0;padding:0 0 0 12px;list-style:none;border-left:2px solid var(--line);display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted)}
+.upds time{font-family:var(--f-mono);font-size:12px;color:var(--ink);margin-right:6px}
+.pill.corro{font-family:var(--f-mono);font-weight:500}
+.card h3{font-size:17px;line-height:1.35;font-weight:600}
+.card h3 a{text-decoration:none}
+.card h3 a:hover{text-decoration:underline}
+.why{margin:0;font-weight:500}
+.why b{color:var(--bc);font-weight:700}
+.ex{margin:0;color:var(--muted);font-size:15px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ex.open{-webkit-line-clamp:unset;display:block}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-family:var(--f-mono);font-size:12px;padding:2px 8px;border:1px solid var(--line);border-radius:6px;color:var(--muted)}
+.acts{display:flex;align-items:center;gap:4px;border-top:1px solid var(--line);margin:4px -6px 0;padding-top:4px;flex-wrap:wrap}
+.ib{min-width:40px;min-height:44px;border:0;background:transparent;border-radius:10px;font-size:20px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;opacity:.55;filter:grayscale(1)}
+.ib:hover{background:var(--soft)}
+.ib[aria-pressed="true"]{opacity:1;filter:none;background:var(--soft)}
+.ib.txt{font-size:14px;font-weight:600;opacity:1;filter:none;padding:0 12px;color:var(--ink)}
+.acts .sp{flex:1}
+.ib.txt.hide{color:var(--muted)}
+.ib.txt.armed{background:var(--bc,var(--accent));color:var(--surface)}
+.card.slim{flex-direction:row;align-items:center;gap:8px;padding:2px 6px 2px 14px}
+.card.slim a{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none;font-weight:500;color:var(--muted)}
+.card.slim a:hover{text-decoration:underline}
+.card.slim .st{flex:none;width:44px;display:flex;justify-content:flex-end;gap:2px;font-size:14px;line-height:1}
+.trysel{min-height:44px;max-width:110px;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:0 10px;font-size:14px;font-weight:600;color:var(--totry)}
+.rows{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.row{display:flex;gap:8px;align-items:center;padding:6px 6px 6px 14px;border-top:1px solid var(--line);border-left:4px solid var(--bc,transparent)}
+.row:first-child{border-top:0}
+.row .t{flex:1;min-width:0;padding:6px 0}
+.row .t a{text-decoration:none;font-weight:500}
+.row .t a:hover{text-decoration:underline}
+.row .t .s{display:block;font-size:13px;color:var(--muted)}
+.row .t .w{display:block;font-size:15px;margin-top:2px}
+details.noise>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:48px;padding:0 14px;border:1px dashed var(--line);border-radius:var(--r);color:var(--muted);font-weight:600}
+details.noise>summary::-webkit-details-marker{display:none}
+details.noise[open]>summary{margin-bottom:12px}
+details.noise>summary .chev{margin-left:auto;transition:transform .15s}
+details.noise[open]>summary .chev{transform:rotate(90deg)}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:24px 18px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+.empty strong{color:var(--ink);font-size:17px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip .n{font-family:var(--f-mono);font-size:12px;opacity:.75}
+.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.tile{font:inherit;color:inherit;text-align:left;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 8px;min-width:0;border-top:3px solid var(--bc,var(--line))}
+.tile[aria-pressed="true"]{border-color:var(--bc);box-shadow:inset 0 0 0 1px var(--bc);background:color-mix(in srgb,var(--bc) 10%,var(--surface))}
+.tile .v{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.tile .l{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font-weight:600}
+.sugg{background:color-mix(in srgb,var(--accent) 7%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:8px}
+.sugg .btns{display:flex;gap:8px}
+.btn{min-height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-weight:600;cursor:pointer}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tree{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.node{display:grid;grid-template-columns:32px 1fr auto;gap:2px 8px;padding:8px 14px 8px calc(6px + var(--d,0) * 16px);border-top:1px solid var(--line);align-items:center}
+.node:first-child{border-top:0}
+.node .lab{font-weight:600;min-width:0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.node.d0 .lab{font-size:16px}
+.node:not(.d0) .lab{font-weight:500;font-size:15px}
+.node .id{font-family:var(--f-mono);font-size:11px;color:var(--muted);grid-column:2}
+.node .tg{grid-row:1 / span 2;grid-column:1;width:32px;height:44px;border:0;background:transparent;cursor:pointer;color:var(--muted);font-size:16px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.node .tg:hover{background:var(--soft)}
+.node .tg[aria-expanded="true"] span{transform:rotate(90deg)}
+.node .tg span{display:inline-block;transition:transform .15s}
+.node .lab{grid-column:2}
+.tbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tbar input{flex:1 1 200px;min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:16px}
+.node mark{background:color-mix(in srgb,var(--accent) 25%,transparent);color:inherit;border-radius:3px}
+.node .st{grid-row:1 / span 2;grid-column:3;display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.node .st .num{text-align:right;min-width:44px;line-height:1.3}
+.node .st .num b{color:var(--ink);font-size:14px}
+.prio{font-family:var(--f-mono);font-size:11px;font-weight:500;padding:1px 6px;border-radius:5px;border:1px solid currentColor}
+.p1{color:var(--accent)} .p2{color:var(--muted)} .p3{color:var(--noise);opacity:.7}
+.ratio{display:flex;height:6px;width:52px;border-radius:3px;overflow:hidden;background:var(--soft)}
+.ratio i{display:block}
+.spark{width:64px;height:22px}
+.spark path.l{fill:none;stroke:var(--accent);stroke-width:1.5}
+.spark path.a{fill:color-mix(in srgb,var(--accent) 18%,transparent)}
+.spark circle{fill:var(--accent)}
+.src-row{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:12px 14px;border-top:1px solid var(--line);align-items:center}
+.src-row:first-child{border-top:0}
+.src-row .nm{font-weight:600}
+.src-row .sub{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;grid-column:1}
+.src-row.off .nm,.src-row.off .sub{opacity:.55}
+.st-ok{color:var(--ok)} .st-warn{color:var(--warn)} .st-bad{color:var(--bad)}
+.sw{position:relative;width:52px;height:32px;grid-row:1 / span 2;grid-column:2}
+.sw input{appearance:none;-webkit-appearance:none;margin:0;width:52px;height:32px;border-radius:999px;background:var(--line);cursor:pointer;transition:background .15s}
+.sw input::after{content:"";position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+.sw input:checked{background:var(--ok)}
+.sw input:checked::after{transform:translateX(20px)}
+.note{font-size:13px;color:var(--muted)}
+#sheet{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center}
+#sheet[hidden]{display:none}
+#sheet .bd{position:absolute;inset:0;background:rgba(0,0,0,.4)}
+#sheet .pn{position:relative;background:var(--surface);width:100%;max-width:560px;border-radius:16px 16px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;max-height:85%;overflow:auto}
+#sheet .pn h3{font-size:16px}
+#sheet .lbl{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+#sheet .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+#sheet .opt{min-height:48px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-weight:600;cursor:pointer;border-left:4px solid var(--bc,var(--line))}
+#sheet .opt[aria-pressed="true"]{background:var(--soft);outline:2px solid var(--bc,var(--ink))}
+@media (min-width:760px){#sheet{align-items:center}#sheet .pn{border-radius:16px}}
+#toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:30;max-width:calc(100% - 32px)}
+#toast[hidden]{display:none}
+.banner{font-size:14px;padding:10px 14px;border-radius:10px;background:color-mix(in srgb,var(--warn) 14%,var(--surface));color:var(--ink)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="brand"><i aria-hidden="true"></i>{{WATCH_NAME}}</div>
+  <div class="weeksel" id="weeksel"></div>
+</div></header>
+<nav class="tabs" aria-label="Sections"><ul id="tabs"></ul></nav>
+<main class="wrap" id="view"><div class="empty"><strong>Loading your watch</strong><span>Connecting to the data store.</span></div></main>
+<div id="sheet" hidden><div class="bd" data-act="close"></div><div class="pn" role="dialog" aria-modal="true" aria-labelledby="sheet-t" id="sheet-pn"></div></div>
+<div id="toast" role="status" hidden></div>
+<script>
+"use strict";
+const BUCKETS=[["signal","Signal"],["watch","Watch"],["totry","To try"],["brief","Briefs"],["noise","Noise"]];
+const BL=Object.fromEntries(BUCKETS);
+const TRY=[["totry","To try"],["tried","Tried"],["adopted","Adopted"],["dropped","Dropped"]];
+const TL=Object.fromEntries(TRY);
+const TABS=[["this-week","This week","◉"],["to-try","To try","⚑"],["favourites","Favourites","★"],["tags","Tags","⌗"],["sources","Sources","⇅"]];
+const S={db:null,state:"loading",meta:null,week:null,items:[],tryItems:[],fb:new Map(),tags:[],stats:[],sources:[],tab:"this-week",tryFilter:"totry",noiseOpen:false,tagOpen:new Set(),tagQ:"",openEx:new Set(),loaded:new Set(),armed:null,filter:null};
+const NEEDED=["meta","fb","tags","stats","sources","try"];
+let unsubWeek=null, sheetFor=null;
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtD=d=>{if(!d)return"";const x=new Date(d);return isNaN(x)?"":x.toLocaleDateString("{{LOCALE}}",{day:"numeric",month:"short"})};
+const fmtDT=d=>{if(!d)return"never";const x=new Date(d);return isNaN(x)?"never":x.toLocaleDateString("{{LOCALE}}",{day:"numeric",month:"short"})+" "+x.toLocaleTimeString("{{LOCALE}}",{hour:"2-digit",minute:"2-digit"})};
+function weekRange(w){const m=/^(\d{4})-W(\d{2})$/.exec(w||"");if(!m)return w||"";const y=+m[1],n=+m[2];const j4=new Date(Date.UTC(y,0,4));const mon=new Date(j4);mon.setUTCDate(j4.getUTCDate()-((j4.getUTCDay()+6)%7)+(n-1)*7);const sun=new Date(mon);sun.setUTCDate(mon.getUTCDate()+6);const o={day:"numeric",month:"short",timeZone:"UTC"};return `W${n} · ${mon.toLocaleDateString("{{LOCALE}}",o)} to ${sun.toLocaleDateString("{{LOCALE}}",o)}`}
+function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,3500)}
+function errMsg(e){const c=e&&e.code;if(c==="invalid_argument")return"You can't change this page's data from this view.";if(c==="quota_exceeded")return"The data store is full. Old items need purging.";if(c==="resource_exhausted")return"Too many changes at once. Wait a moment and retry.";return"Change not saved. Check your connection and retry."}
+const srcName=id=>{const s=S.sources.find(x=>x.id===id);return s?s.name:(id||"")};
+
+/* ---------- data ---------- */
+async function init(){
+  renderTabs();route();
+  let db=null;
+  for(let i=0;i<50&&!window.claude;i++)await new Promise(r=>setTimeout(r,200));
+  try{db=window.claude?await window.claude.use("db"):null}catch(e){db=null}
+  if(!db){S.state="nodb";render();return}
+  S.db=db;
+  const slow=setTimeout(()=>{if(S.state==="loading"){S.state="slow";render()}},10000);
+  const done=k=>{S.loaded.add(k);if(NEEDED.every(x=>S.loaded.has(x))&&S.state!=="ready"){clearTimeout(slow);S.state="ready"}render()};
+  const fail=k=>e=>{console.warn(k,e);done(k);if(e&&e.code==="revoked")S.state="nodb";render()};
+  const snap=(k,fn)=>[s=>{fn(s);if(!s.metadata||!s.metadata.fromCache)done(k);else render()},fail(k)];
+  db.doc("meta/state").onSnapshot(...snap("meta",s=>{S.meta=s.exists?s.data():null;pickWeek()}));
+  db.collection("feedback").onSnapshot(...snap("fb",s=>{S.fb=new Map(s.docs.map(d=>[d.id,{...d.data()}]))}));
+  db.collection("tags").onSnapshot(...snap("tags",s=>{S.tags=s.docs.map(d=>({id:d.id,...d.data()}))}));
+  db.collection("tagStats").orderBy("week","desc").limit(12).onSnapshot(...snap("stats",s=>{S.stats=s.docs.map(d=>d.data())}));
+  db.collection("sources").onSnapshot(...snap("sources",s=>{S.sources=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order??99)-(b.order??99))}));
+  db.collection("items").where("bucket","==","totry").onSnapshot(...snap("try",s=>{S.tryItems=s.docs.map(d=>({id:d.id,...d.data()}))}));
+}
+function weeks(){return ((S.meta&&S.meta.weeks)||[]).slice().sort().reverse()}
+function pickWeek(){const ws=weeks();if(!ws.length){S.week=null;return}if(!S.week||!ws.includes(S.week))setWeek(ws[0])}
+function setWeek(w){
+  if(w===S.week&&unsubWeek)return;
+  S.week=w;S.items=[];S.noiseOpen=false;S.weekLoaded=false;
+  if(unsubWeek)unsubWeek();
+  unsubWeek=S.db.collection("items").where("week","==",w).onSnapshot(s=>{S.items=s.docs.map(d=>({id:d.id,...d.data()}));S.weekLoaded=true;render()},e=>{console.warn(e);S.weekLoaded=true;render()});
+  render();
+}
+function itemById(id){return S.items.find(x=>x.id===id)||S.tryItems.find(x=>x.id===id)||fromSnap(id)}
+function fromSnap(id){const f=S.fb.get(id);if(!f||!f.snap)return null;return{id,...f.snap,bucket:f.bucketClaude||"noise",_snap:true}}
+const eff=it=>{const f=S.fb.get(it.id);return(f&&f.bucketUser)||it.bucket||"noise"};
+function snapOf(it){return{title:it.title||"",url:it.url||"",sourceId:it.sourceId||"",week:it.week||"",tags:it.tags||[],oneLine:it.oneLine||"",excerpt:it.excerpt||""}}
+
+const queue=new Map();
+function saveFb(it,patch){
+  if(!S.db)return;
+  const cur=S.fb.get(it.id);const now=new Date().toISOString();
+  const isNew=!cur;
+  const next=isNew?{rating:null,favourite:false,bucketClaude:it.bucket||"noise",bucketUser:null,tryStatus:null,moves:[],snap:snapOf(it),seed:false,...patch,updatedAt:now}:{...cur,...patch,updatedAt:now};
+  S.fb.set(it.id,next);render();
+  const prev=queue.get(it.id)||Promise.resolve();
+  const p=prev.then(()=>{const ref=S.db.doc("feedback/"+it.id);return isNew?ref.set(next):ref.update({...patch,updatedAt:now})}).catch(e=>{console.warn(e);toast(errMsg(e))});
+  queue.set(it.id,p);
+}
+function act(id,kind,val){
+  const it=itemById(id);if(!it)return;const f=S.fb.get(id)||{};
+  if(kind==="rate"){const v=Number(val);saveFb(it,{rating:f.rating===v?null:v})}
+  else if(kind==="fav"){saveFb(it,{favourite:!f.favourite})}
+  else if(kind==="try"){saveFb(it,{tryStatus:val||null})}
+  else if(kind==="hide"){clearTimeout(act.t);if(S.armed===id){S.armed=null;saveFb(it,{hidden:true})}else{S.armed=id;render();act.t=setTimeout(()=>{if(S.armed===id){S.armed=null;render()}},3000)}}
+  else if(kind==="show"){saveFb(it,{hidden:false})}
+  else if(kind==="move"){const from=eff(it);if(from===val)return;const claude=f.bucketClaude||it.bucket;const p={bucketUser:val===claude?null:val,moves:[...(f.moves||[]),{from,to:val,at:new Date().toISOString()}]};if(val==="totry"&&!f.tryStatus)p.tryStatus="totry";saveFb(it,p);toast(`Moved to ${BL[val]}`)}
+}
+
+/* ---------- render ---------- */
+function renderTabs(){
+  $("#tabs").innerHTML=TABS.map(([id,l,ic])=>`<li><a href="#${id}" data-tab="${id}"><span class="ic" aria-hidden="true">${ic}</span><span>${l}</span></a></li>`).join("");
+}
+function route(){const h=location.hash.slice(1);S.tab=TABS.some(t=>t[0]===h)?h:"this-week";render();window.scrollTo(0,0)}
+function render(){
+  document.querySelectorAll("#tabs a").forEach(a=>{if(a.dataset.tab===S.tab)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  renderWeekSel();
+  const v=$("#view");
+  if(S.state==="nodb"){v.innerHTML=empty("Data not available here","This page keeps its data in Claude. Open it on claude.ai or in the Claude app while signed in.");return}
+  if(S.state==="loading"&&!S.loaded.size){v.innerHTML=empty("Loading your watch","Connecting to the data store.");return}
+  const slow=S.state==="slow"?`<div class="banner">Some data can't be reached yet. What you see may be out of date.</div>`:"";
+  const fn={"this-week":vWeek,"to-try":vTry,"favourites":vFav,"tags":vTags,"sources":vSources}[S.tab];
+  const ae=document.activeElement,keep=ae&&ae.id==="tagq"?[ae.selectionStart,ae.selectionEnd]:null;
+  v.innerHTML=slow+fn();
+  if(keep){const i=$("#tagq");if(i){i.focus();try{i.setSelectionRange(keep[0],keep[1])}catch(_){}}}
+  if(sheetFor)renderSheet();
+}
+function empty(t,s){return`<div class="empty"><strong>${esc(t)}</strong><span>${s}</span></div>`}
+function renderWeekSel(){
+  const el=$("#weeksel");const ws=weeks();
+  if(S.tab!=="this-week"||!ws.length){el.innerHTML="";return}
+  const cur=el.querySelector("select");
+  const html=`<label for="wk" class="sr" hidden>Week</label><select id="wk" aria-label="Week">${ws.map(w=>`<option value="${esc(w)}"${w===S.week?" selected":""}>${esc(weekRange(w))}</option>`).join("")}</select>`;
+  if(!cur||cur.options.length!==ws.length||cur.value!==S.week)el.innerHTML=html;
+}
+function rateBtns(id){const f=S.fb.get(id)||{};return[[1,"👍","Like"],[0.5,"🤷","Meh"],[0,"👎","Dislike"]].map(([v,e,l])=>`<button class="ib" data-act="rate" data-id="${esc(id)}" data-v="${v}" aria-pressed="${f.rating===v}" aria-label="${l}" title="${l}">${e}</button>`).join("")}
+function favBtn(id){const f=S.fb.get(id)||{};return`<button class="ib" data-act="fav" data-id="${esc(id)}" aria-pressed="${!!f.favourite}" aria-label="Favourite" title="Favourite">⭐</button>`}
+function trySel(id,cur){return`<select class="trysel" data-act="try" data-id="${esc(id)}" aria-label="To try status">${TRY.map(([k,l])=>`<option value="${k}"${k===cur?" selected":""}>${l}</option>`).join("")}</select>`}
+function tagChips(t){return(t||[]).length?`<div class="tags">${t.map(x=>`<span class="tag">${esc(x)}</span>`).join("")}</div>`:""}
+function movedPill(it){const f=S.fb.get(it.id);if(!f||!f.bucketUser)return"";return`<span class="pill moved">Claude said ${esc(BL[f.bucketClaude||it.bucket]||"?")}</span>`}
+function card(it){
+  const b=eff(it);const f=S.fb.get(it.id)||{};
+  const whyLab={signal:"Why signal",watch:"Why watch",totry:"Why try",brief:"What happened"}[b]||"";
+  const showTry=b==="totry"||f.tryStatus;
+  const exOpen=S.openEx.has(it.id);
+  if(f.hidden)return`<article class="card slim b-${b}"><a href="${esc(it.url)}" target="_blank" rel="noopener" title="${esc(it.title)}">${esc(it.title)}</a>${(()=>{const r=f.rating===1?["👍","Liked"]:f.rating===0.5?["🤷","Meh"]:f.rating===0?["👎","Disliked"]:null;const l=[f.favourite?"Favourite":"",r?r[1]:"Not rated"].filter(Boolean).join(", ");return`<span class="st" role="img" aria-label="${l}" title="${l}">${f.favourite?"⭐":""}${r?r[0]:""}</span>`})()}<button class="ib txt" data-act="show" data-id="${esc(it.id)}" aria-label="Show card">Show</button></article>`;
+  const armed=S.armed===it.id;
+  return`<article class="card b-${b}">
+  <div class="meta"><span class="src">${esc(srcName(it.sourceId))}</span><time>${fmtD(it.publishedAt)}</time>${it.corroboration>1?`<span class="pill corro" title="Sources mentioning this story">×${it.corroboration} sources</span>`:""}${it.promotedFrom?`<span class="pill">Promoted from Watch</span>`:""}${(it.updates&&it.updates.length)?`<span class="pill upd">Updated · seen ${it.seenWeeks||it.updates.length+1} weeks</span>`:""}${movedPill(it)}</div>
+  <h3><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a></h3>
+  ${it.oneLine?`<p class="why"><b>${whyLab}:</b> ${esc(it.oneLine)}</p>`:""}
+  ${it.excerpt?`<p class="ex${exOpen?" open":""}" data-act="ex" data-id="${esc(it.id)}">${esc(it.excerpt)}</p>`:""}
+  ${(it.updates&&it.updates.length)?`<ul class="upds">${it.updates.slice().reverse().map(u=>`<li><time>${esc(weekRange(u.week).split(" · ")[0])}</time> ${esc(u.line||"")}</li>`).join("")}${it.firstWeek?`<li><time>${esc(weekRange(it.firstWeek).split(" · ")[0])}</time> First seen</li>`:""}</ul>`:""}
+  ${tagChips(it.tags)}
+  <div class="acts">${rateBtns(it.id)}${favBtn(it.id)}<span class="sp"></span>${showTry?trySel(it.id,f.tryStatus||"totry"):""}<button class="ib txt" data-act="sheet" data-id="${esc(it.id)}" aria-label="Move or more actions">Move…</button><button class="ib txt hide${armed?" armed":""}" data-act="hide" data-id="${esc(it.id)}" aria-label="${armed?"Confirm hide":"Hide card"}">${armed?"Confirm":"Hide"}</button></div>
+</article>`}
+function row(it,withLine){
+  const b=eff(it);const f=S.fb.get(it.id)||{};
+  const r=f.rating===1?"👍":f.rating===0.5?"🤷":f.rating===0?"👎":"";
+  return`<div class="row b-${b}"><div class="t"><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a>${withLine&&it.oneLine?`<span class="w">${esc(it.oneLine)}</span>`:""}<span class="s">${esc(srcName(it.sourceId))} · ${fmtD(it.publishedAt)}${f.favourite?" · ⭐":""}${r?" · "+r:""}${f.bucketUser?` · <span class="pill moved">Claude said ${esc(BL[f.bucketClaude||it.bucket])}</span>`:""}</span></div><button class="ib txt" data-act="sheet" data-id="${esc(it.id)}" aria-label="Rate or move">⋯</button></div>`}
+function sortIt(a,b){return(a.rank??999)-(b.rank??999)||String(b.publishedAt||"").localeCompare(String(a.publishedAt||""))}
+
+function vWeek(){
+  if(S.state!=="ready"&&!S.loaded.has("meta"))return empty("Loading your watch","Reading the week list.");
+  if(!weeks().length)return empty("No run yet","The first Friday run fills the last 4 weeks. Items will appear here, sorted into Signal, Watch, To try, Briefs and Noise.");
+  if(!S.weekLoaded)return empty("Loading "+weekRange(S.week),"Reading this week's items.");
+  if(!S.items.length)return empty("Nothing this week","The run found no items for "+esc(weekRange(S.week))+".");
+  const g={signal:[],watch:[],totry:[],brief:[],noise:[]};
+  S.items.forEach(it=>{(g[eff(it)]||g.noise).push(it)});
+  Object.values(g).forEach(a=>a.sort(sortIt));
+  const tiles=`<div class="summary">${BUCKETS.map(([k,l])=>`<button class="tile b-${k}" data-act="filt" data-v="${k}" aria-pressed="${S.filter===k}" aria-label="${S.filter===k?"Show all buckets":"Show only "+l}"><div class="v">${g[k].length}</div><div class="l">${l}</div></button>`).join("")}</div>`;
+  const sec=(k,hint,body)=>`<section class="sec" aria-labelledby="h-${k}"><div class="sec-h"><h2 id="h-${k}">${BL[k]}</h2><span class="n">${g[k].length}</span>${hint?`<span class="hint">${hint}</span>`:""}</div>${body}</section>`;
+  let out=tiles;const F=S.filter,on=k=>!F||F===k;
+  if(F&&!g[F].length)return out+empty("No "+BL[F]+" this week","Tap the tile again to show all buckets.");
+  out+=on("signal")&&g.signal.length?sec("signal","Lasting shifts",g.signal.map(card).join("")):"";
+  out+=on("watch")&&g.watch.length?sec("watch","Promising, unconfirmed",g.watch.map(card).join("")):"";
+  out+=on("totry")&&g.totry.length?sec("totry","Use it now",g.totry.map(card).join("")):"";
+  out+=on("brief")&&g.brief.length?sec("brief","One-time events",`<div class="rows">${g.brief.map(it=>row(it,true)).join("")}</div>`):"";
+  if(on("noise"))out+=`<details class="noise"${S.noiseOpen?" open":""} id="noise"><summary>Noise <span class="n" style="font-family:var(--f-mono);font-weight:500">${g.noise.length}</span><span class="chev" aria-hidden="true">›</span></summary>${S.noiseOpen&&g.noise.length?`<div class="rows">${g.noise.map(it=>row(it,false)).join("")}</div>`:S.noiseOpen?empty("No noise this week",""):""}</details>`;
+  return out;
+}
+function vTry(){
+  const map=new Map();
+  S.tryItems.forEach(it=>{const f=S.fb.get(it.id);if(f&&f.bucketUser&&f.bucketUser!=="totry"&&!f.tryStatus)return;map.set(it.id,it)});
+  S.fb.forEach((f,id)=>{if(f.seed)return;if(f.tryStatus||f.bucketUser==="totry"){if(!map.has(id)){const it=itemById(id);if(it)map.set(id,it)}}});
+  const all=[...map.values()].map(it=>({it,st:(S.fb.get(it.id)||{}).tryStatus||"totry"}));
+  const cnt=Object.fromEntries(TRY.map(([k])=>[k,all.filter(x=>x.st===k).length]));
+  const list=all.filter(x=>x.st===S.tryFilter).sort((a,b)=>String(b.it.publishedAt||"").localeCompare(String(a.it.publishedAt||"")));
+  const chips=`<div class="chips" role="group" aria-label="Filter by status">${TRY.map(([k,l])=>`<button class="chip" data-act="tryf" data-v="${k}" aria-pressed="${S.tryFilter===k}">${l} <span class="n">${cnt[k]}</span></button>`).join("")}</div>`;
+  if(!all.length)return`<section class="sec"><div class="sec-h"><h2>To try</h2></div>${empty("Backlog empty","Tools, skills and techniques classed To try land here, across all weeks. Set their status as you go: Tried, Adopted or Dropped.")}</section>`;
+  return`<section class="sec"><div class="sec-h"><h2>To try</h2><span class="n">${all.length}</span></div>${chips}${list.length?list.map(x=>card(x.it)).join(""):empty("Nothing here","No item with this status.")}</section>`;
+}
+function vFav(){
+  const list=[];S.fb.forEach((f,id)=>{if(f.favourite&&!f.seed){const it=itemById(id);if(it)list.push(it)}});
+  list.sort((a,b)=>String((S.fb.get(b.id)||{}).updatedAt).localeCompare(String((S.fb.get(a.id)||{}).updatedAt)));
+  return`<section class="sec"><div class="sec-h"><h2>Favourites</h2><span class="n">${list.length}</span><span class="hint">Kept beyond 3 months</span></div>${list.length?list.map(card).join(""):empty("No favourites yet","Tap ⭐ on any card to keep it here for good.")}</section>`;
+}
+function spark(vals){
+  const w=64,h=22,n=vals.length;if(n<2||!vals.some(v=>v>0))return`<svg class="spark" viewBox="0 0 ${w} ${h}" aria-hidden="true"></svg>`;
+  const mx=Math.max(...vals,1);const pts=vals.map((v,i)=>[i*(w-4)/(n-1)+2,h-3-(v/mx)*(h-6)]);
+  const d=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+  const last=pts[n-1];
+  return`<svg class="spark" viewBox="0 0 ${w} ${h}" aria-hidden="true"><path class="a" d="${d} L${last[0].toFixed(1)} ${h} L2 ${h} Z"/><path class="l" d="${d}"/><circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="2"/></svg>`}
+function vTags(){
+  if(!S.tags.length)return empty("No tags yet","The tag tree is loaded from MyTaste.md at setup.");
+  const sugg=S.tags.filter(t=>t.status==="suggested");
+  const act=S.tags.filter(t=>t.status!=="suggested"&&t.status!=="rejected");
+  const stats=S.stats.slice().sort((a,b)=>String(a.week).localeCompare(String(b.week)));
+  const under=(id,t)=>t===id||t.startsWith(id+".");
+  const ratings={};S.fb.forEach(f=>{if(f.seed||f.rating==null||!f.snap)return;(f.snap.tags||[]).forEach(t=>{(ratings[t]=ratings[t]||[0,0,0])[f.rating===1?0:f.rating===0.5?1:2]++})});
+  const kids=new Map();act.forEach(t=>{const p=t.parent||"";if(!kids.has(p))kids.set(p,[]);kids.get(p).push(t)});
+  kids.forEach(a=>a.sort((x,y)=>(x.order??999)-(y.order??999)||x.id.localeCompare(y.id)));
+  const stat=id=>{let n=0,sig=0,last=null;const series=stats.map(s=>{let v=0;for(const[k,o]of Object.entries(s.tags||{}))if(under(id,k)){v+=o.n||0;sig+=o.signal||0}n+=v;if(v>0)last=s.week;return v});const r=[0,0,0];for(const[k,a]of Object.entries(ratings))if(under(id,k)){r[0]+=a[0];r[1]+=a[1];r[2]+=a[2]}return{n,sig,last,series,r}};
+  S._tagCtx={act,kids,stat};
+  const sg=sugg.length?`<section class="sec"><div class="sec-h"><h2>Suggested tags</h2><span class="n">${sugg.length}</span></div>${sugg.map(t=>`<div class="sugg"><div class="lab"><strong>${esc(t.label||t.id)}</strong> <span class="tag">${esc(t.id)}</span></div>${t.reason?`<div class="note">${esc(t.reason)}</div>`:""}<div class="btns"><button class="btn pri" data-act="tagok" data-id="${esc(t.id)}">Accept</button><button class="btn" data-act="tagno" data-id="${esc(t.id)}">Reject</button></div></div>`).join("")}</section>`:"";
+  return sg+`<section class="sec"><div class="sec-h"><h2>Tag tree</h2><span class="n">${act.length}</span><span class="hint">Last ${stats.length||0} weeks</span></div><div class="tbar"><input id="tagq" type="search" placeholder="Search tags, ids, keywords" aria-label="Search tags" value="${esc(S.tagQ)}"><button class="btn" data-act="tagall" data-v="1">Expand all</button><button class="btn" data-act="tagall" data-v="0">Collapse all</button></div><div class="tree" id="tree-body">${treeHtml()}</div><p class="note">Bar: 👍 green, 🤷 amber, 👎 red. Curve: items per week. Parent rows include their children.</p></section>`;
+}
+function treeHtml(){
+  const c=S._tagCtx;if(!c)return"";const {act,kids,stat}=c;
+  const q=S.tagQ.trim().toLowerCase();
+  let show=null;
+  if(q){show=new Set();act.forEach(t=>{const hay=(t.label+" "+t.id+" "+(t.keywords||[]).join(" ")).toLowerCase();if(hay.includes(q)){let x=t.id;show.add(x);while(x.includes(".")){x=x.slice(0,x.lastIndexOf("."));show.add(x)}}})}
+  const hl=txt=>{const e=esc(txt);if(!q)return e;const i=String(txt).toLowerCase().indexOf(q);if(i<0)return e;return esc(txt.slice(0,i))+"<mark>"+esc(txt.slice(i,i+q.length))+"</mark>"+esc(txt.slice(i+q.length))};
+  const out=[];
+  const walk=(p,d)=>{(kids.get(p)||[]).forEach(t=>{
+    if(show&&!show.has(t.id))return;
+    const has=(kids.get(t.id)||[]).length>0;const open=q?true:S.tagOpen.has(t.id);
+    const s=stat(t.id);const tot=s.r[0]+s.r[1]+s.r[2];
+    out.push(`<div class="node d${d}" style="--d:${d}">${has?`<button class="tg" data-act="tagtg" data-id="${esc(t.id)}" aria-expanded="${open}" aria-label="${open?"Collapse":"Expand"} ${esc(t.label||t.id)}"><span>›</span></button>`:`<span></span>`}<div class="lab">${hl(t.label||t.id)} <span class="prio p${t.priority||2}" title="Priority">P${t.priority||2}</span></div><div class="id">${hl(t.id)}${s.last?` · last ${esc(weekRange(s.last).split(" · ")[0])}`:""}</div><div class="st"><div class="num"><b>${s.n}</b><br>${s.sig} sig</div><div title="👍 ${s.r[0]} · 🤷 ${s.r[1]} · 👎 ${s.r[2]}">${tot?`<div class="ratio"><i style="width:${s.r[0]/tot*100}%;background:var(--ok)"></i><i style="width:${s.r[1]/tot*100}%;background:var(--warn)"></i><i style="width:${s.r[2]/tot*100}%;background:var(--bad)"></i></div>`:`<div class="ratio"></div>`}</div>${spark(s.series)}</div></div>`);
+    if(has&&open)walk(t.id,d+1)})};
+  walk("",0);
+  return out.length?out.join(""):`<div class="node"><span></span><div class="lab">No tag matches "${esc(S.tagQ)}"</div></div>`;
+}
+function vSources(){
+  if(!S.sources.length)return empty("No sources yet","The source list is loaded at setup.");
+  const now=Date.now();
+  const on=S.sources.filter(s=>s.enabled).length;
+  const failing=S.sources.filter(s=>s.enabled&&s.lastFetch&&s.lastFetch.status==="error").length;
+  const roleL={item:"Item",crosscheck:"Cross-check",totry:"To try candidates"};
+  const rows=S.sources.map(s=>{
+    const lf=s.lastFetch||null;const st=lf?lf.status:"never";
+    const stale=s.lastItemAt&&now-new Date(s.lastItemAt)>30*864e5;const broken=(s.failStreak||0)>=3;
+    const stTxt=st==="ok"?`<span class="st-ok">● OK${lf.items!=null?` · ${lf.items} items`:""}</span>`:st==="empty"?`<span class="st-warn">● Empty</span>`:st==="error"?`<span class="st-bad">● Failed</span>`:`<span>○ Not fetched yet</span>`;
+    return`<div class="src-row${s.enabled?"":" off"}"><div class="nm">${esc(s.name)}</div><label class="sw"><input type="checkbox" data-act="src" data-id="${esc(s.id)}" ${s.enabled?"checked":""} aria-label="Fetch ${esc(s.name)}"></label><div class="sub"><span class="pill">${esc(roleL[s.role]||s.role)}</span><span>${esc(s.type||"")} · ${esc((s.access||"").toUpperCase())}</span>${stTxt}${lf?`<span>${fmtDT(lf.at)}</span>`:""}${stale?`<span class="pill" style="color:var(--warn)">Stale</span>`:""}${broken?`<span class="pill" style="color:var(--bad)">Broken</span>`:""}${s.note?`<span>${esc(s.note)}</span>`:""}${lf&&lf.error?`<span class="st-bad">${esc(lf.error)}</span>`:""}</div></div>`}).join("");
+  const run=S.meta&&S.meta.lastRunAt?`Last run ${fmtDT(S.meta.lastRunAt)}.`:"No run yet.";
+  return`<section class="sec"><div class="sec-h"><h2>Sources</h2><span class="n">${on}/${S.sources.length} on</span>${failing?`<span class="hint st-bad">${failing} failed</span>`:""}</div><p class="note">${run} Changes here sync to config/sources.md at the next run.</p><div class="rows">${rows}</div></section>`;
+}
+
+/* ---------- sheet ---------- */
+function openSheet(id){sheetFor=id;$("#sheet").hidden=false;renderSheet();const b=$("#sheet-pn button");b&&b.focus()}
+function closeSheet(){sheetFor=null;$("#sheet").hidden=true}
+function renderSheet(){
+  const it=itemById(sheetFor);if(!it){closeSheet();return}
+  const f=S.fb.get(it.id)||{};const b=eff(it);
+  $("#sheet-pn").innerHTML=`<h3 id="sheet-t">${esc(it.title)}</h3>
+  <div class="lbl">Rate</div><div class="acts" style="border:0;margin:0">${rateBtns(it.id)}${favBtn(it.id)}</div>
+  <div class="lbl">Move to</div><div class="grid">${BUCKETS.map(([k,l])=>`<button class="opt b-${k}" data-act="move" data-id="${esc(it.id)}" data-v="${k}" aria-pressed="${b===k}">${l}${(f.bucketClaude||it.bucket)===k?" (Claude)":""}</button>`).join("")}</div>
+  ${b==="totry"||f.tryStatus?`<div class="lbl">To try status</div>${trySel(it.id,f.tryStatus||"totry")}`:""}
+  <button class="btn" data-act="close">Done</button>`;
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-act]");if(!el)return;
+  const a=el.dataset.act,id=el.dataset.id;
+  if(a==="rate")act(id,"rate",el.dataset.v);
+  else if(a==="fav")act(id,"fav");
+  else if(a==="hide")act(id,"hide");
+  else if(a==="show")act(id,"show");
+  else if(a==="move"){act(id,"move",el.dataset.v)}
+  else if(a==="sheet")openSheet(id);
+  else if(a==="close")closeSheet();
+  else if(a==="ex"){S.openEx.has(id)?S.openEx.delete(id):S.openEx.add(id);el.classList.toggle("open")}
+  else if(a==="tagtg"){S.tagOpen.has(id)?S.tagOpen.delete(id):S.tagOpen.add(id);const tb=$("#tree-body");if(tb)tb.innerHTML=treeHtml()}
+  else if(a==="tagall"){if(el.dataset.v==="1"){S.tagOpen=new Set(S.tags.map(t=>t.id))}else S.tagOpen.clear();const tb=$("#tree-body");if(tb)tb.innerHTML=treeHtml()}
+  else if(a==="tryf"){S.tryFilter=el.dataset.v;render()}
+  else if(a==="filt"){const k=el.dataset.v;S.filter=S.filter===k?null:k;if(S.filter==="noise")S.noiseOpen=true;render()}
+  else if(a==="tagok"||a==="tagno"){const ok=a==="tagok";el.disabled=true;S.db.doc("tags/"+id).update({status:ok?"active":"rejected",decidedAt:new Date().toISOString()}).then(()=>toast(ok?"Tag accepted":"Tag rejected")).catch(er=>{el.disabled=false;toast(errMsg(er))})}
+});
+document.addEventListener("change",e=>{
+  const el=e.target;
+  if(el.id==="wk"){setWeek(el.value);return}
+  const a=el.dataset&&el.dataset.act;
+  if(a==="try")act(el.dataset.id,"try",el.value);
+  else if(a==="src"){const on=el.checked;S.db.doc("sources/"+el.dataset.id).update({enabled:on}).then(()=>toast(on?"Source on":"Source off")).catch(er=>{el.checked=!on;toast(errMsg(er))})}
+});
+document.addEventListener("input",e=>{if(e.target.id==="tagq"){S.tagQ=e.target.value;const tb=$("#tree-body");if(tb)tb.innerHTML=treeHtml()}});
+document.addEventListener("toggle",e=>{if(e.target.id==="noise"){const o=e.target.open;if(o!==S.noiseOpen){S.noiseOpen=o;render()}}},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&sheetFor)closeSheet()});
+window.addEventListener("hashchange",route);
+init();
+</script>
+</body>
+</html>
