@@ -8,9 +8,9 @@
 
 **Français** · [English](#english)
 
-| <img src="docs/screenshots/week-unsorted.png" width="200" alt="New week, nothing sorted yet"> | <img src="docs/screenshots/week-sorted.png" width="200" alt="Week mostly sorted"> | <img src="docs/screenshots/news-list.png" width="200" alt="Briefs list"> | <img src="docs/screenshots/favourites.png" width="200" alt="Favourites"> |
+| <img src="docs/screenshots/week-unsorted.png" width="200" alt="New week, nothing sorted yet"> | <img src="docs/screenshots/week-sorted.png" width="200" alt="Week sorted"> | <img src="docs/screenshots/news-list.png" width="200" alt="Briefs list"> | <img src="docs/screenshots/favourites.png" width="200" alt="Favourites"> |
 |:---:|:---:|:---:|:---:|
-| Semaine reçue, rien de trié<br/>*New week, nothing sorted yet* | Semaine presque triée<br/>*Week mostly sorted* | Liste des brèves<br/>*Briefs list* | Favoris<br/>*Favourites* |
+| Semaine reçue, rien de trié<br/>*New week, nothing sorted yet* | Semaine triée<br/>*Week sorted* | Liste des brèves<br/>*Briefs list* | Favoris<br/>*Favourites* |
 
 | <img src="docs/screenshots/noise.png" width="200" alt="Noise, collapsed list"> | <img src="docs/screenshots/tags-suggested.png" width="200" alt="Suggested tag"> | <img src="docs/screenshots/tags-tree.png" width="200" alt="Tag tree with stats"> | <img src="docs/screenshots/sources.png" width="200" alt="Sources panel"> |
 |:---:|:---:|:---:|:---:|
