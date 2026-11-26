@@ -12,6 +12,10 @@
 |:---:|:---:|:---:|:---:|
 | Semaine reçue, rien de trié<br/>*New week, nothing sorted yet* | Semaine presque triée<br/>*Week mostly sorted* | Liste des brèves<br/>*Briefs list* | Favoris<br/>*Favourites* |
 
+| <img src="docs/screenshots/noise.png" width="200" alt="Noise, collapsed list"> | <img src="docs/screenshots/tags.png" width="200" alt="Tags panel"> | <img src="docs/screenshots/sources.png" width="200" alt="Sources panel"> |
+|:---:|:---:|:---:|
+| Bruit<br/>*Noise* | Onglet Tags<br/>*Tags panel* | Onglet Sources<br/>*Sources panel* |
+
 ---
 
 <a id="francais"></a>
