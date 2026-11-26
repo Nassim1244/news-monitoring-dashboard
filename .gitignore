@@ -1,0 +1,29 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# OneDrive / Office temp files
+~$*
+*.tmp
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Secrets
+.env
+.env.*
+*.key
+.claude/settings.local.json
+
+# User data: a personal watch built with the skill in this folder.
+# Templates live in skills/news-monitoring-dashboard/assets/.
+/config/
+/artifact/
+/run/
+/*-watch/
+pass1.json*
+pass2.json
