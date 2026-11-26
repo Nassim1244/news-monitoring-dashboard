@@ -10,7 +10,7 @@
       "name": "news-monitoring-dashboard",
       "source": "./",
       "description": "Build a personal news watch for any field, with a learning dashboard and a scheduled run.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "category": "productivity",
       "tags": ["news", "veille", "monitoring", "digest"]
     }

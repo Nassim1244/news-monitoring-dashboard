@@ -3,7 +3,7 @@
 **Un plugin Claude Code qui construit votre veille personnelle, pour n'importe quel domaine, et sépare le signal du bruit. / A Claude Code plugin that builds your personal news watch, for any field, and separates signal from noise.**
 
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
-[![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-green.svg)](CHANGELOG.md)
+[![Version 1.0.1](https://img.shields.io/badge/version-1.0.1-green.svg)](CHANGELOG.md)
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757.svg)](https://code.claude.com/docs/en/plugins)
 
 **Français** · [English](#english)
