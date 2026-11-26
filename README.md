@@ -79,6 +79,23 @@ flowchart LR
 /plugin install news-monitoring-dashboard@news-monitoring-dashboard
 ```
 
+### Installation manuelle (si la commande `/plugin` est bloquée)
+
+Installez le skill seul à partir du ZIP, sans terminal : Claude s'occupe de la copie.
+
+1. Sur la [page GitHub du dépôt](https://github.com/Nassim1244/news-monitoring-dashboard), cliquez sur **Code**, puis **Download ZIP**.
+
+   <img src="docs/screenshots/download-zip.png" width="480" alt="Bouton Code puis Download ZIP sur GitHub">
+2. Décompressez le fichier `news-monitoring-dashboard-main.zip`.
+3. Ouvrez le dossier décompressé dans Claude Code et demandez :
+
+   > Installe le skill `skills/news-monitoring-dashboard` dans mes skills personnels.
+
+   Claude le copie dans `~/.claude/skills/` (il vous demande d'abord l'autorisation).
+4. Relancez Claude Code, ouvrez le dossier de votre veille et suivez le [Démarrage rapide](#démarrage-rapide).
+
+Le skill s'appelle alors `/news-monitoring-dashboard` (sans le préfixe du plugin). Ne créez pas votre veille dans le dossier décompressé : il ne sert qu'à l'installation, et vous pouvez le supprimer ensuite. Sans le plugin, pas de mise à jour automatique : pour mettre à jour, téléchargez à nouveau le ZIP et refaites l'étape 3.
+
 ## Démarrage rapide
 
 1. Ouvrez **le dossier de votre veille** dans Claude Code (un dossier vide, ou un nouveau sous-dossier : le skill en propose un).
@@ -255,6 +272,23 @@ flowchart LR
 /plugin marketplace add Nassim1244/news-monitoring-dashboard
 /plugin install news-monitoring-dashboard@news-monitoring-dashboard
 ```
+
+### Manual install (if the `/plugin` command is blocked)
+
+Install the skill on its own from the ZIP, no terminal needed: Claude does the copying.
+
+1. On the [repository's GitHub page](https://github.com/Nassim1244/news-monitoring-dashboard), click **Code**, then **Download ZIP**.
+
+   <img src="docs/screenshots/download-zip.png" width="480" alt="Code button then Download ZIP on GitHub">
+2. Unzip `news-monitoring-dashboard-main.zip`.
+3. Open the unzipped folder in Claude Code and ask:
+
+   > Install the skill `skills/news-monitoring-dashboard` into my personal skills.
+
+   Claude copies it into `~/.claude/skills/` (it asks for your permission first).
+4. Restart Claude Code, open your watch folder and follow the [Quick start](#quick-start).
+
+The skill is then called `/news-monitoring-dashboard` (without the plugin prefix). Don't build your watch inside the unzipped folder: it is only for the install, and you can delete it afterwards. Without the plugin there are no automatic updates: to update, download the ZIP again and repeat step 3.
 
 ## Quick start
 
