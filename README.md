@@ -91,6 +91,7 @@ flowchart LR
 
 - Ouvrez la page sur votre téléphone ou votre ordinateur.
 - Notez les cartes, mettez en favori les meilleures, déplacez celles que Claude a mal rangées : chaque déplacement affine votre définition du signal.
+- Partagez une carte avec 🔗 : le menu de partage du téléphone s'ouvre, sinon le lien est copié.
 - Acceptez ou rejetez les tags suggérés dans l'onglet Tags.
 - Activez ou coupez des sources dans l'onglet Sources (une source en échec 3 fois de suite est signalée comme cassée).
 - Après 3 ou 4 semaines, demandez à Claude de revoir les seuils À surveiller vers Essentiel avec vos notes.
@@ -262,6 +263,7 @@ flowchart LR
 
 - Open the page on your phone or computer.
 - Rate cards, favourite the best ones, move cards Claude put in the wrong bucket: every move sharpens your idea of signal.
+- Share a card with 🔗: your phone's share menu opens, or the link is copied.
 - Accept or reject the tags Claude suggests in the Tags tab.
 - Turn sources on or off in the Sources tab (a source that fails 3 runs in a row is flagged as broken).
 - After 3 or 4 weeks, ask Claude to review the Watch to Signal thresholds with your ratings.
