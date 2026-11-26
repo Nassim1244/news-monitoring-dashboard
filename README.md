@@ -8,8 +8,9 @@
 
 **Français** · [English](#english)
 
-<!-- TODO: add docs/screenshot.png (dashboard on mobile, light and dark) -->
-*Une capture d'écran du tableau de bord (mobile, thèmes clair et sombre) arrive bientôt. / A screenshot of the dashboard (mobile, light and dark) is coming soon.*
+| <img src="docs/screenshots/week-unsorted.png" width="200" alt="New week, nothing sorted yet"> | <img src="docs/screenshots/week-sorted.png" width="200" alt="Week mostly sorted"> | <img src="docs/screenshots/news-list.png" width="200" alt="Briefs list"> | <img src="docs/screenshots/favourites.png" width="200" alt="Favourites"> |
+|:---:|:---:|:---:|:---:|
+| Semaine reçue, rien de trié<br/>*New week, nothing sorted yet* | Semaine presque triée<br/>*Week mostly sorted* | Liste des brèves<br/>*Briefs list* | Favoris<br/>*Favourites* |
 
 ---
 
@@ -166,7 +167,7 @@ Pistes envisagées, sans engagement :
 
 - [ ] davantage de packs de départ ;
 - [ ] lecture via navigateur pour les sources qui bloquent WebFetch ;
-- [ ] captures d'écran et démo ;
+- [ ] une démo vidéo ;
 - [ ] davantage de langues d'affichage ;
 - [ ] réglage automatique des seuils À surveiller vers Essentiel.
 
@@ -337,7 +338,7 @@ Ideas under consideration, no commitment:
 
 - [ ] more starting packs;
 - [ ] browser-based fetching for sources that block WebFetch;
-- [ ] screenshots and a demo;
+- [ ] a video demo;
 - [ ] more display languages;
 - [ ] automatic tuning of the Watch to Signal thresholds.
 
